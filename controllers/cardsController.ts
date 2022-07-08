@@ -37,14 +37,20 @@ export async function getCardsFromEmployee(req: Request, res: Response) {
   res.send({ cards });
 }
 
-export function getBalanceAndTransactionsFromCard(req: Request, res: Response) {
-  res.send("Gastos e as transações");
+export async function getBalanceAndTransactionsFromCard(
+  req: Request,
+  res: Response
+) {
+  const { cardId } = req.body;
+
+  const data = await cardService.getBalanceAndTransactionsFromCard(cardId);
+  res.send(data);
 }
 
-export function blockEmployeeCard(req: Request, res: Response) {
+export async function blockEmployeeCard(req: Request, res: Response) {
   res.send("Bloqueei um cartão");
 }
 
-export function unblockEmployeeCard(req: Request, res: Response) {
+export async function unblockEmployeeCard(req: Request, res: Response) {
   res.send("Desbloqueei um cartão");
 }

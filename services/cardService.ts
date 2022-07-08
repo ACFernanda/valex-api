@@ -6,6 +6,8 @@ import bcrypt from "bcrypt";
 import * as companyRepository from "../repositories/companyRepository.js";
 import * as employeeRepository from "../repositories/employeeRepository.js";
 import * as cardRepository from "../repositories/cardRepository.js";
+import * as paymentRepository from "../repositories/paymentRepository.js";
+import * as rechargeRepository from "../repositories/rechargeRepository.js";
 
 async function createNewCard(
   key: string,
@@ -120,8 +122,32 @@ async function getCardsFromEmployee(employeeId: number, password: string) {
   return cards;
 }
 
+async function getBalanceAndTransactionsFromCard(cardId: number) {
+  const card = await cardRepository.findById(cardId);
+  if (!card) {
+    throw {
+      type: "not_found",
+      message: `Could not find card!`,
+    };
+  }
+
+  const payments = await paymentRepository.findByCardId(cardId);
+  const recharges = await rechargeRepository.findByCardId(cardId);
+
+  let sumPayments: number;
+  payments.map((payment) => (sumPayments += payment.amount));
+
+  let sumRecharges: number;
+  recharges.map((recharge) => (sumRecharges += recharge.amount));
+
+  const balance = sumRecharges - sumPayments;
+
+  return { balance, transactions: payments, recharges };
+}
+
 export const cardService = {
   createNewCard,
   activateEmployeeCard,
   getCardsFromEmployee,
+  getBalanceAndTransactionsFromCard,
 };
