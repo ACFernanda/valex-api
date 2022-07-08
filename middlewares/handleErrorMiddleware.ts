@@ -21,6 +21,9 @@ export default function handleErrorsMiddleware(
   if (error.type === "unauthorized") {
     res.status(401).send(error.message);
   }
+  if (error.type === "conflict") {
+    res.status(409).send(error.message);
+  }
 
   res.sendStatus(500);
 }

@@ -81,7 +81,7 @@ async function activateEmployeeCard(
 
   if (card.password) {
     throw {
-      type: "bad_request",
+      type: "conflict",
       message: `Card already active!`,
     };
   }
@@ -109,6 +109,15 @@ async function getCardsFromEmployee(employeeId: number, password: string) {
       message: `Could not find specified "${employee}"!`,
     };
   }
+
+  const allEmployeecards = await cardRepository.findByEmployeeId(employee.id);
+  const cards = [];
+  allEmployeecards.map((card) => {
+    if (bcrypt.compareSync(password, card.password)) {
+      cards.push(card);
+    }
+  });
+  return cards;
 }
 
 export const cardService = {

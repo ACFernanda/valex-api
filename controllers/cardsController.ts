@@ -33,8 +33,8 @@ export async function getCardsFromEmployee(req: Request, res: Response) {
   const { employeeId, password }: { employeeId: number; password: string } =
     req.body;
 
-  await cardService.getCardsFromEmployee(employeeId, password);
-  res.send("Achei um cartão");
+  const cards = await cardService.getCardsFromEmployee(employeeId, password);
+  res.send({ cards });
 }
 
 export function getBalanceAndTransactionsFromCard(req: Request, res: Response) {
