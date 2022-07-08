@@ -48,7 +48,10 @@ export async function getBalanceAndTransactionsFromCard(
 }
 
 export async function blockEmployeeCard(req: Request, res: Response) {
-  res.send("Bloqueei um cartão");
+  const { cardId, password }: { cardId: number; password: string } = req.body;
+
+  await cardService.blockEmployeeCard(cardId, password);
+  res.sendStatus(200);
 }
 
 export async function unblockEmployeeCard(req: Request, res: Response) {

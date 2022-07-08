@@ -145,9 +145,69 @@ async function getBalanceAndTransactionsFromCard(cardId: number) {
   return { balance, transactions: payments, recharges };
 }
 
+async function blockEmployeeCard(cardId: number, password: string) {
+  const card = await cardRepository.findById(cardId);
+  if (!card) {
+    throw {
+      type: "not_found",
+      message: `Could not find card!`,
+    };
+  }
+
+  // if (card.expirationDate) ...
+
+  if (card.isBlocked === true) {
+    throw {
+      type: "conflict",
+      message: `Card already blocked!`,
+    };
+  }
+
+  if (!bcrypt.compareSync(password, card.password)) {
+    throw {
+      type: "unauthorized",
+      message: `Unauthorized.`,
+    };
+  }
+
+  await cardRepository.update(cardId, { isBlocked: true });
+  return;
+}
+
+async function unblockEmployeeCard(cardId: number, password: string) {
+  const card = await cardRepository.findById(cardId);
+  if (!card) {
+    throw {
+      type: "not_found",
+      message: `Could not find card!`,
+    };
+  }
+
+  // if (card.expirationDate) ...
+
+  if (card.isBlocked === false) {
+    throw {
+      type: "conflict",
+      message: `Card already unblocked!`,
+    };
+  }
+
+  if (!bcrypt.compareSync(password, card.password)) {
+    throw {
+      type: "unauthorized",
+      message: `Unauthorized.`,
+    };
+  }
+
+  await cardRepository.update(cardId, { isBlocked: false });
+  return;
+}
+
 export const cardService = {
   createNewCard,
   activateEmployeeCard,
   getCardsFromEmployee,
   getBalanceAndTransactionsFromCard,
+  blockEmployeeCard,
+  unblockEmployeeCard,
 };
