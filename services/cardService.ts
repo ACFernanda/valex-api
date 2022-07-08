@@ -18,7 +18,7 @@ async function createNewCard(
   if (!company) {
     throw {
       type: "not_found",
-      message: `Could not find specified "${company}"!`,
+      message: `Could not find specified company!`,
     };
   }
 
@@ -26,7 +26,7 @@ async function createNewCard(
   if (!employee) {
     throw {
       type: "not_found",
-      message: `Could not find specified "${employee}"!`,
+      message: `Could not find specified employee!`,
     };
   }
 
@@ -43,7 +43,7 @@ async function createNewCard(
 
   const cardNumber = faker.random.numeric(16);
   const cardName = employee.fullName.toUpperCase(); // FAZER A LÓGICA DO NOME DO CARTÃO
-  const expirationDate = dayjs().add(5, "year").format("MM/YY");
+  const expirationDate = dayjs().add(5, "year").format("YYYY-MM-DD");
   const securityCode = faker.random.numeric(3);
 
   const cryptr = new Cryptr("myTotallySecretKey");
@@ -79,7 +79,12 @@ async function activateEmployeeCard(
     };
   }
 
-  // if (card.expirationDate) ...
+  if (dayjs().isAfter(card.expirationDate, "month")) {
+    throw {
+      type: "unauthorized",
+      message: `Expirated card.`,
+    };
+  }
 
   if (card.password) {
     throw {
