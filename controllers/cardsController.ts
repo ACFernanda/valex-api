@@ -55,5 +55,8 @@ export async function blockEmployeeCard(req: Request, res: Response) {
 }
 
 export async function unblockEmployeeCard(req: Request, res: Response) {
-  res.send("Desbloqueei um cartão");
+  const { cardId, password }: { cardId: number; password: string } = req.body;
+
+  await cardService.unblockEmployeeCard(cardId, password);
+  res.sendStatus(200);
 }
