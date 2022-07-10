@@ -5,7 +5,7 @@ export default async function apiKeyValidateMiddleware(
   res: Response,
   next: NextFunction
 ) {
-  const key: string = req.headers["x-api-key"].toString();
+  const key = req.headers["x-api-key"];
 
   if (!key) throw { type: "bad_request", message: "API key is required." };
 
