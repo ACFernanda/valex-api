@@ -17,7 +17,7 @@ async function createNewCard(
   const employee = await utils.checkIfEmployeeExists(employeeId, company.id);
   await utils.checkIfEmployeeHasCardType(employeeId, cardType);
 
-  const cardNumber = faker.random.numeric(16); // MUDAR PRA STRING COM O LAYOUT
+  const cardNumber = generateCardNumber();
   const cardName = formatNameToCardHolderName(employee.fullName);
   const expirationDate = dayjs().add(5, "year").format("MM/YY");
   const securityCode = faker.random.numeric(3);
@@ -102,4 +102,11 @@ function formatNameToCardHolderName(fullName: string) {
   }
   simplifiedName += ` ${name[name.length - 1]}`;
   return simplifiedName.toUpperCase();
+}
+
+function generateCardNumber() {
+  const number = faker.random.numeric(16);
+  const formatedNumber = number.match(/.{1,4}/g).join(" ");
+
+  return formatedNumber;
 }
