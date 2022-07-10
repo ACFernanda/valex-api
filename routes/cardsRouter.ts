@@ -1,4 +1,5 @@
 import { Router } from "express";
+
 import {
   activateEmployeeCard,
   blockEmployeeCard,
@@ -6,10 +7,11 @@ import {
   getBalanceAndTransactionsFromCard,
   unblockEmployeeCard,
 } from "../controllers/cardsController.js";
+import apiKeyValidateMiddleware from "../middlewares/apiKeyValidateMiddleware.js";
 
 const cardsRouter = Router();
 
-cardsRouter.post("/new-card", createNewCard);
+cardsRouter.post("/new-card", apiKeyValidateMiddleware, createNewCard);
 cardsRouter.post("/activate-card", activateEmployeeCard);
 // cardsRouter.post("/view-card", getCardsFromEmployee); ROTA RETIRADA DOS REQUISITOS
 cardsRouter.post("/balance-transactions", getBalanceAndTransactionsFromCard);

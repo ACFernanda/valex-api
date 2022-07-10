@@ -21,8 +21,11 @@ async function checkIfCompanyExists(companyKey: string) {
   return company;
 }
 
-async function checkIfEmployeeExists(employeeId: number) {
-  const employee = await employeeRepository.findById(employeeId);
+async function checkIfEmployeeExists(employeeId: number, companyId: number) {
+  const employee = await employeeRepository.findByEmployeeIdAndCompanyId(
+    employeeId,
+    companyId
+  );
   if (!employee) {
     throw {
       type: "not_found",

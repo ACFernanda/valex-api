@@ -13,8 +13,8 @@ async function createNewCard(
   employeeId: number,
   cardType: cardRepository.TransactionTypes
 ) {
-  await utils.checkIfCompanyExists(key);
-  const employee = await utils.checkIfEmployeeExists(employeeId);
+  const company = await utils.checkIfCompanyExists(key);
+  const employee = await utils.checkIfEmployeeExists(employeeId, company.id);
   await utils.checkIfEmployeeHasCardType(employeeId, cardType);
 
   const cardNumber = faker.random.numeric(16); // MUDAR PRA STRING COM O LAYOUT

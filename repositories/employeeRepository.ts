@@ -8,10 +8,13 @@ export interface Employee {
   companyId: number;
 }
 
-export async function findById(id: number) {
-  const result = await db.query<Employee, [number]>(
-    "SELECT * FROM employees WHERE id=$1",
-    [id]
+export async function findByEmployeeIdAndCompanyId(
+  employeeId: number,
+  companyId: number
+) {
+  const result = await db.query(
+    `SELECT * FROM employees WHERE id=$1 AND "companyId"=$2`,
+    [employeeId, companyId]
   );
 
   return result.rows[0];
