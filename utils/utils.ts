@@ -77,12 +77,21 @@ async function checkIfCardIsActive(cardPassword: string) {
   return;
 }
 
+async function checkIfCardIsInactive(cardPassword: string) {
+  if (cardPassword) {
+    throw {
+      type: "conflict",
+      message: `Card is already active!`,
+    };
+  }
+
+  return;
+}
+
 async function checkIfCardIsExpired(expirationDate: string) {
   const date: string[] = expirationDate.split("/");
   const month: number = parseInt(date[0]);
   const year: number = parseInt(date[1]);
-  console.log("year: ", year);
-  console.log("dayjs year: ", dayjs().year());
 
   if (dayjs().year() > 2000 + year) {
     throw {
@@ -101,7 +110,7 @@ async function checkIfCardIsExpired(expirationDate: string) {
   return;
 }
 
-async function checkIfSecyrityCodeIsCorrect(securityCode: string, card) {
+async function checkIfSecurityCodeIsCorrect(securityCode: string, card) {
   const cryptr = new Cryptr("myTotallySecretKey");
   if (securityCode !== cryptr.decrypt(card.securityCode)) {
     throw {
@@ -184,14 +193,13 @@ async function checkIfBalanceIsEnough(balance, amount) {
 }
 
 async function getCardBalance(payments, recharges) {
-  let sumPayments: number;
+  let sumPayments: number = 0;
   payments.map((payment) => (sumPayments += payment.amount));
 
-  let sumRecharges: number;
+  let sumRecharges: number = 0;
   recharges.map((recharge) => (sumRecharges += recharge.amount));
 
   const balance = sumRecharges - sumPayments;
-
   return balance;
 }
 
@@ -201,8 +209,9 @@ export const utils = {
   checkIfEmployeeHasCardType,
   checkIfCardExists,
   checkIfCardIsActive,
+  checkIfCardIsInactive,
   checkIfCardIsExpired,
-  checkIfSecyrityCodeIsCorrect,
+  checkIfSecurityCodeIsCorrect,
   checkIfCardIsBlocked,
   checkIfCardIsUnblocked,
   checkIfPasswordIsCorrect,

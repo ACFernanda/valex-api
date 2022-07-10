@@ -12,5 +12,5 @@ export async function postNewPOSPayment(req: Request, res: Response) {
     req.body;
 
   await paymentService.postNewPOSPayment(cardId, password, businessId, amount);
-  res.sendStatus(401);
+  res.sendStatus(201);
 }

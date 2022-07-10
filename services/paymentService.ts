@@ -23,6 +23,8 @@ async function postNewPOSPayment(
 
   const paymentData = { cardId, businessId, amount };
   await paymentRepository.insert(paymentData);
+
+  return;
 }
 
 export const paymentService = {

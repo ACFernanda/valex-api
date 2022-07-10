@@ -21,6 +21,7 @@ async function createNewCard(
   const cardName = formatNameToCardHolderName(employee.fullName);
   const expirationDate = dayjs().add(5, "year").format("MM/YY");
   const securityCode = faker.random.numeric(3);
+  console.log("securitycode: ", securityCode);
   const cryptr = new Cryptr("myTotallySecretKey");
   const encryptSecurityCode = cryptr.encrypt(securityCode);
 
@@ -38,7 +39,7 @@ async function createNewCard(
   };
 
   await cardRepository.insert(newCard);
-  return newCard;
+  return;
 }
 
 async function activateEmployeeCard(
@@ -48,8 +49,8 @@ async function activateEmployeeCard(
 ) {
   const card = await utils.checkIfCardExists(cardId);
   await utils.checkIfCardIsExpired(card.expirationDate);
-  await utils.checkIfCardIsActive(card.password);
-  await utils.checkIfSecyrityCodeIsCorrect(securityCode, card);
+  await utils.checkIfCardIsInactive(card.password);
+  await utils.checkIfSecurityCodeIsCorrect(securityCode, card);
 
   const passwordHash = bcrypt.hashSync(password, 10);
   const updateData = { password: passwordHash };
