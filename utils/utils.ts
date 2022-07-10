@@ -81,18 +81,20 @@ async function checkIfCardIsExpired(expirationDate: string) {
   const date: string[] = expirationDate.split("/");
   const month: number = parseInt(date[0]);
   const year: number = parseInt(date[1]);
+  console.log("year: ", year);
+  console.log("dayjs year: ", dayjs().year());
 
-  if (dayjs().year() > year) {
+  if (dayjs().year() > 2000 + year) {
     throw {
       type: "unauthorized",
       message: `Card expired.`,
     };
   }
 
-  if (dayjs().year() === year && dayjs().month() + 1 > month) {
+  if (dayjs().year() === 2000 + year && dayjs().month() + 1 > month) {
     throw {
       type: "unauthorized",
-      message: `Card expired.`,
+      message: `Card expired here.`,
     };
   }
 
