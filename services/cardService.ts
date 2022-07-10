@@ -21,7 +21,6 @@ async function createNewCard(
   const cardName = formatNameToCardHolderName(employee.fullName);
   const expirationDate = dayjs().add(5, "year").format("MM/YY");
   const securityCode = faker.random.numeric(3);
-  console.log("securitycode: ", securityCode);
   const cryptr = new Cryptr("myTotallySecretKey");
   const encryptSecurityCode = cryptr.encrypt(securityCode);
 
