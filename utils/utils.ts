@@ -81,7 +81,7 @@ async function checkIfCardIsInactive(cardPassword: string) {
   if (cardPassword) {
     throw {
       type: "conflict",
-      message: `Card is already active!`,
+      message: `Card is active!`,
     };
   }
 
@@ -103,7 +103,7 @@ async function checkIfCardIsExpired(expirationDate: string) {
   if (dayjs().year() === 2000 + year && dayjs().month() + 1 > month) {
     throw {
       type: "unauthorized",
-      message: `Card expired here.`,
+      message: `Card expired.`,
     };
   }
 
@@ -126,7 +126,7 @@ async function checkIfCardIsBlocked(card) {
   if (card.isBlocked === true) {
     throw {
       type: "conflict",
-      message: `Card already blocked!`,
+      message: `Card is blocked!`,
     };
   }
 
@@ -137,7 +137,7 @@ async function checkIfCardIsUnblocked(card) {
   if (card.isBlocked === false) {
     throw {
       type: "conflict",
-      message: `Card already unblocked!`,
+      message: `Card is unblocked!`,
     };
   }
 
