@@ -37,15 +37,14 @@ async function createNewCard(
   if (employeeCardWithSameType) {
     throw {
       type: "method_not_allowed",
-      message: `Employee card type "${cardType}" already exists!`,
+      message: `Employee card type already exists!`,
     };
   }
 
   const cardNumber = faker.random.numeric(16);
-  const cardName = employee.fullName.toUpperCase(); // FAZER A LÓGICA DO NOME DO CARTÃO
-  const expirationDate = dayjs().add(5, "year").format("YYYY-MM-DD");
+  const cardName = formatNameToCardHolderName(employee.fullName);
+  const expirationDate = dayjs().add(5, "year").format("MM/YY");
   const securityCode = faker.random.numeric(3);
-
   const cryptr = new Cryptr("myTotallySecretKey");
   const encryptSecurityCode = cryptr.encrypt(securityCode);
 
@@ -63,7 +62,7 @@ async function createNewCard(
   };
 
   await cardRepository.insert(newCard);
-  return;
+  return newCard;
 }
 
 async function activateEmployeeCard(
@@ -113,7 +112,7 @@ async function getCardsFromEmployee(employeeId: number, password: string) {
   if (!employee) {
     throw {
       type: "not_found",
-      message: `Could not find specified "${employee}"!`,
+      message: `Could not find specified employee!`,
     };
   }
 
@@ -216,3 +215,13 @@ export const cardService = {
   blockEmployeeCard,
   unblockEmployeeCard,
 };
+
+function formatNameToCardHolderName(fullName: string) {
+  const name: string[] = fullName.split(" ");
+  let simplifiedName: string = name[0];
+  for (let i = 1; i < name.length - 1; i++) {
+    if (name[i].length >= 3) simplifiedName += ` ${name[i][0]}`;
+  }
+  simplifiedName += ` ${name[name.length - 1]}`;
+  return simplifiedName.toUpperCase();
+}

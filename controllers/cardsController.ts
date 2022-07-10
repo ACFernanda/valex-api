@@ -14,8 +14,8 @@ export async function createNewCard(req: Request, res: Response) {
     res.sendStatus(401);
   }
 
-  await cardService.createNewCard(key, employeeId, cardType);
-  res.sendStatus(201);
+  const newCard = await cardService.createNewCard(key, employeeId, cardType);
+  res.status(201).send(newCard);
 }
 
 export async function activateEmployeeCard(req: Request, res: Response) {
@@ -27,14 +27,6 @@ export async function activateEmployeeCard(req: Request, res: Response) {
 
   await cardService.activateEmployeeCard(cardId, securityCode, password);
   res.sendStatus(200);
-}
-
-export async function getCardsFromEmployee(req: Request, res: Response) {
-  const { employeeId, password }: { employeeId: number; password: string } =
-    req.body;
-
-  const cards = await cardService.getCardsFromEmployee(employeeId, password);
-  res.send({ cards });
 }
 
 export async function getBalanceAndTransactionsFromCard(
